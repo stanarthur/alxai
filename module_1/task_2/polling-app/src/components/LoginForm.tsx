@@ -3,18 +3,34 @@
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { createClientComponentClient } from '@supabase/auth-helpers-nextjs';
+import ReCAPTCHA from 'react-google-recaptcha';
+
+const MAX_ATTEMPTS = 3;
 
 export default function LoginForm() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
+  const [attempts, setAttempts] = useState(0);
+  const [captchaValue, setCaptchaValue] = useState<string | null>(null);
   const router = useRouter();
   const supabase = createClientComponentClient();
+
+  const handleCaptcha = (value: string | null) => {
+    setCaptchaValue(value);
+  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError(null);
+
+    // If too many attempts, require CAPTCHA
+    if (attempts >= MAX_ATTEMPTS && !captchaValue) {
+      setError('Please complete the CAPTCHA');
+      return;
+    }
+
     setLoading(true);
 
     try {
@@ -24,14 +40,15 @@ export default function LoginForm() {
       });
 
       if (error) {
-        setError(error.message);
+        setAttempts((prev) => prev + 1);
+        setError('Invalid email or password');
         return;
       }
 
+      setAttempts(0); // Reset on success
       router.push('/');
       router.refresh();
     } catch (err) {
-      console.error('Login error:', err);
       setError('An unexpected error occurred');
     } finally {
       setLoading(false);
@@ -74,6 +91,15 @@ export default function LoginForm() {
             required
           />
         </div>
+        {/* Show CAPTCHA after MAX_ATTEMPTS */}
+        {attempts >= MAX_ATTEMPTS && (
+          <div className="mb-4">
+            <ReCAPTCHA
+              sitekey="YOUR_RECAPTCHA_SITE_KEY"
+              onChange={handleCaptcha}
+            />
+          </div>
+        )}
         <div className="flex items-center justify-between">
           <button
             className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
