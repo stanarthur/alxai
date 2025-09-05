@@ -21,11 +21,18 @@ export default function LoginForm() {
     setCaptchaValue(value);
   };
 
+  /**
+   * Handles the login form submission.
+   * Authenticates the user using Supabase and manages error states.
+   * Resets attempt counter on success, increments on failure.
+   *
+   * @param e - The form submission event
+   */
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError(null);
 
-    // If too many attempts, require CAPTCHA
+    // If too many failed attempts, require CAPTCHA before proceeding
     if (attempts >= MAX_ATTEMPTS && !captchaValue) {
       setError('Please complete the CAPTCHA');
       return;
@@ -34,18 +41,21 @@ export default function LoginForm() {
     setLoading(true);
 
     try {
+      // Attempt to sign in with Supabase
       const { error } = await supabase.auth.signInWithPassword({
         email,
         password,
       });
 
       if (error) {
+        // Increment failed attempts and show generic error
         setAttempts((prev) => prev + 1);
         setError('Invalid email or password');
         return;
       }
 
-      setAttempts(0); // Reset on success
+      // Reset attempts on successful login
+      setAttempts(0);
       router.push('/');
       router.refresh();
     } catch (err) {
