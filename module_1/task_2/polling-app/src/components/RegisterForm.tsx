@@ -1,13 +1,13 @@
-'use client';
+"use client";
 
-import { useState } from 'react';
-import { useRouter } from 'next/navigation';
-import { createClientComponentClient } from '@supabase/auth-helpers-nextjs';
+import { useState } from "react";
+import { useRouter } from "next/navigation";
+import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
 
 export default function RegisterForm() {
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [confirmPassword, setConfirmPassword] = useState('');
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
   const router = useRouter();
@@ -19,7 +19,7 @@ export default function RegisterForm() {
 
     // Validate passwords match
     if (password !== confirmPassword) {
-      setError('Passwords do not match');
+      setError("Passwords do not match");
       return;
     }
 
@@ -40,11 +40,13 @@ export default function RegisterForm() {
       }
 
       // Show success message and redirect to login
-      alert('Registration successful! Please check your email to verify your account.');
-      router.push('/auth/login');
+      alert(
+        "Registration successful! Please check your email to verify your account.",
+      );
+      router.push("/auth/login");
     } catch (err) {
-      console.error('Registration error:', err);
-      setError('An unexpected error occurred');
+      console.error("Registration error:", err);
+      setError("An unexpected error occurred");
     } finally {
       setLoading(false);
     }
@@ -52,14 +54,23 @@ export default function RegisterForm() {
 
   return (
     <div className="w-full max-w-md">
-      <form onSubmit={handleSubmit} className="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4">
+      <form
+        onSubmit={handleSubmit}
+        className="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4"
+      >
         {error && (
-          <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative mb-4" role="alert">
+          <div
+            className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative mb-4"
+            role="alert"
+          >
             <span className="block sm:inline">{error}</span>
           </div>
         )}
         <div className="mb-4">
-          <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="email">
+          <label
+            className="block text-gray-700 text-sm font-bold mb-2"
+            htmlFor="email"
+          >
             Email
           </label>
           <input
@@ -73,7 +84,10 @@ export default function RegisterForm() {
           />
         </div>
         <div className="mb-4">
-          <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="password">
+          <label
+            className="block text-gray-700 text-sm font-bold mb-2"
+            htmlFor="password"
+          >
             Password
           </label>
           <input
@@ -87,7 +101,10 @@ export default function RegisterForm() {
           />
         </div>
         <div className="mb-6">
-          <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="confirm-password">
+          <label
+            className="block text-gray-700 text-sm font-bold mb-2"
+            htmlFor="confirm-password"
+          >
             Confirm Password
           </label>
           <input
@@ -106,7 +123,7 @@ export default function RegisterForm() {
             type="submit"
             disabled={loading}
           >
-            {loading ? 'Registering...' : 'Register'}
+            {loading ? "Registering..." : "Register"}
           </button>
         </div>
       </form>
