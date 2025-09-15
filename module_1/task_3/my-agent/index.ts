@@ -21,5 +21,5 @@ const codeReviewAgent = async (prompt: string) => {
 
 // Specify which directory the code review agent should review changes in your prompt
 await codeReviewAgent(
-  "Review the code changes in the current directory, make your reviews and suggestions file by file",
+  "Review the code changes in the current directory with rootDir='.' (dot), make your reviews and suggestions file by file",
 );
