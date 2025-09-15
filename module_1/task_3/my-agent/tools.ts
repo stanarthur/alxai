@@ -14,12 +14,13 @@ type FileChange = z.infer<typeof fileChange>;
 
 async function getFileChangesInDirectory({ rootDir }: FileChange) {
   const git = simpleGit(rootDir);
-  const summary = await git.diffSummary();
+  // Check for staged changes
+  const summary = await git.diffSummary(['--staged']);
   const diffs: { file: string; diff: string }[] = [];
 
   for (const file of summary.files) {
     if (excludeFiles.includes(file.file)) continue;
-    const diff = await git.diff(["--", file.file]);
+    const diff = await git.diff(['--staged', '--', file.file]);
     diffs.push({ file: file.file, diff });
   }
 
