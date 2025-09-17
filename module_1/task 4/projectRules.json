@@ -1,0 +1,9 @@
+{
+  "rules": [
+    "Always separate concerns: route → controller → service → model.",
+    "Never expose sensitive fields (passwords, tokens, internal IDs).",
+    "Prefer async/await with proper error handling.",
+    "Follow TypeScript strict typing in all function signatures.",
+    "Use centralized utility functions for error responses."
+  ]
+}
